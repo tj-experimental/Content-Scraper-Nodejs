@@ -1,0 +1,29 @@
+{
+  "name": "content_scraper",
+  "version": "0.0.0",
+  "description": "An npm Package for Node.js using a third party npm package to scrape content from the site. To create a csv file",
+  "main": "scraper.js",
+  "dependencies": {},
+  "devDependencies": {
+    "eslint": "~3.5.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jackton1/Content-Scraper-Nodejs.git"
+  },
+  "keywords": [
+    "content",
+    "scrapper",
+    "php",
+    "json",
+    "website"
+  ],
+  "author": "Tonye Jack",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jackton1/Content-Scraper-Nodejs/issues"
+  }
+}
