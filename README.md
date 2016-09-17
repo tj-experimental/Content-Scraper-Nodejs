@@ -44,4 +44,4 @@ shirts4mikeScraper.on("error", console.error);
 
 ```
 
-`title`, `link` and `author` are `string`s and `publishData` is a JavaScript `Date` object.
+`title`, `price`, `url` and `imageURL` are `strings` and `time` is a JavaScript `Date` object.
