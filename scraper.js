@@ -30,49 +30,64 @@ Code should be well documented.*/
 
 
 const http = require('http');
-var fs = require('fs');
-const https = require('https');
+const fs = require('fs');
 const EventEmitter = require("events").EventEmitter;
 const util = require("util");
 
 
 
 function Scraper(){
-    
+
     EventEmitter.call(this);
 
     var scraperEmitter = this;
 
-    var request = http.get("http://shirts4mike.com", function(response) {
+    var request = http.get("http://www.shirts4mike.com/", function(response) {
         var body = "";
 
         if (response.statusCode !== 200) {
             request.abort();
             //Status Code Error
-            scraperEmitter.emit("error", new Error("There was an error getting Prices from shirts4mike. (" + http.STATUS_CODES[response.statusCode] + ")"));
+            scraperEmitter.emit('error', new Error("There was an error getting Prices from shirts4mike. (" + http.STATUS_CODES[response.statusCode] + ")"));
         }
 
         //Read the data
         response.on('data', function (chunk) {
             body += chunk;
-            scrapperEmitter.emit("data", chunk);
+            scraperEmitter.emit("data", chunk);
         });
 
         response.on('end', function(){
         	if(response.statusCode === 200){
         		try{
-
+                  console.log(body);
+                    scraperEmitter.emit('end', body);
         		}catch(error){
-
+                  console.error(error);
+                    scraperEmitter.emit('error', error);
         		}
 
         	}
+        }).on("error", function(error){
+            scraperEmitter.emit("error", error);
         });
     });
 
 }
 
+function parseNode(node) {
+    return {
+        title: node.get("title").text(),
+        link: node.get("link").text(),
+        publishDate: new Date(node.get("pubDate").text()),
+        author: node.get("creator").text()
+    }
+}
 
+
+util.inherits(Scraper, EventEmitter);
+
+module.exports = Scraper;
 //Use a linting tool like ESLint to check your code for syntax errors and 
 //to ensure general code quality. You should be able to run npm run lint to check your code.
 //When an error occurs log it to a file scraper-error.log .

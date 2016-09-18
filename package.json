@@ -1,9 +1,10 @@
 {
   "name": "content_scraper",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "An npm Package for Node.js using a third party npm package to scrape content from the site. To create a csv file",
   "main": "scraper.js",
-  "dependencies": {},
+  "dependencies": {
+  },
   "devDependencies": {
     "eslint": "~3.5.0"
   },
