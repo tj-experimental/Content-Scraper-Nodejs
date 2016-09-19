@@ -65,7 +65,7 @@ function Scraper(url){
             if (response.statusCode !== 200) {
                 request.abort();
                 //Status Code Error
-                scraperEmitter.emit('error', new Error("There was an error getting Prices from shirts4mike. (" + http.STATUS_CODES[response.statusCode] + ")"));
+                scraperEmitter.emit('error', new Error("There was an error getting data from "+ url +". (" + http.STATUS_CODES[response.statusCode] + ")"));
             }
 
             //Read the data
