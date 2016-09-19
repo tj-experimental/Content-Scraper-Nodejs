@@ -34,52 +34,62 @@ const http = require('http');
 const fs = require('fs');
 const EventEmitter = require("events").EventEmitter;
 const util = require("util");
+const xRay = require("x-ray");
+var x = xRay();
+
 
 //Use x-ray module or osmosis for content scraping
 
-
 //json2csv to convert the json object to a csv file
+
 
 /*
 @param {string} url - The url of the site to scrape
 @param {requestCallback} response - the callback that handles the response
 @param {string} body - the body of the response
 */
-function Scraper(){
+function Scraper(url){
 
     EventEmitter.call(this);
 
     var scraperEmitter = this;
 
-    var request = http.get("http://www.shirts4mike.com/", function(response) {
-        var body = "";
+    if(typeof url !== 'string'){
+        scraperEmitter.emit('error', new Error("The url type is not a string"));
+    }
 
-        if (response.statusCode !== 200) {
-            request.abort();
-            //Status Code Error
-            scraperEmitter.emit('error', new Error("There was an error getting Prices from shirts4mike. (" + http.STATUS_CODES[response.statusCode] + ")"));
-        }
+    if(url !== "" && typeof url === 'string') {
+        var request = http.get(url, function (response) {
+            var body = "";
 
-        //Read the data
-        response.on('data', function (chunk) {
-            body += chunk;
-            scraperEmitter.emit("data", chunk);
+            if (response.statusCode !== 200) {
+                request.abort();
+                //Status Code Error
+                scraperEmitter.emit('error', new Error("There was an error getting Prices from shirts4mike. (" + http.STATUS_CODES[response.statusCode] + ")"));
+            }
+
+            //Read the data
+            response.on('data', function (chunk) {
+                body += chunk;
+                scraperEmitter.emit("data", chunk);
+            });
+
+            response.on('end', function () {
+                if (response.statusCode === 200) {
+                    try {
+                        scraperEmitter.emit('end', body);
+                    } catch (error) {
+                        scraperEmitter.emit('error', error);
+                    }
+
+                }
+            }).on("error", function (error) {
+                scraperEmitter.emit("error", error);
+            });
         });
-
-        response.on('end', function(){
-        	if(response.statusCode === 200){
-        		try{
-                    scraperEmitter.emit('end', body);
-        		}catch(error){
-                    scraperEmitter.emit('error', error);
-        		}
-
-        	}
-        }).on("error", function(error){
-            scraperEmitter.emit("error", error);
-        });
-    });
-
+    }else{
+        scraperEmitter.emit("error", new Error("The url string cannot be an empty string"));
+    }
 }
 
 function parseNode(node) {
@@ -95,6 +105,10 @@ function parseNode(node) {
 util.inherits(Scraper, EventEmitter);
 
 module.exports = Scraper;
+
+//Error File name scraper-error.log
+//use eslint for error writing to output file using the current Date and Time to append the error to the output file
+
 //Use a linting tool like ESLint to check your code for syntax errors and 
 //to ensure general code quality. You should be able to run npm run lint to check your code.
 //When an error occurs log it to a file scraper-error.log .
