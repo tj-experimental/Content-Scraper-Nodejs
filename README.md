@@ -15,13 +15,15 @@ The current date time of when the scrape happened e.g. 2016-01-29.csv.
 ```javascript
 var Scraper = require("content_scraper");
 
-var shirts4mikeScraper = new Scraper();
+var url = "http://google.com";
+
+var shirts4mikeScraper = new Scraper(url);
 
 /**
-* When the "end" event is triggered an array of prices
+* When the "end" event is triggered an array of article 
 * metadata is returned
 **/
-shirts4mikeScraper.on("end", console.dir);
+shirts4mikeScraper.on("end", console.log);
 
 /**
 * If a parsing, network or HTTP error occurs an
