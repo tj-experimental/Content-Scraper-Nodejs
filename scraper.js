@@ -34,8 +34,10 @@ const fs = require('fs');
 const EventEmitter = require("events").EventEmitter;
 const util = require("util");
 
-
-
+//Use xray module or osmosis
+/*
+@param {string} url - The url of the site to scrape
+*/
 function Scraper(){
 
     EventEmitter.call(this);
