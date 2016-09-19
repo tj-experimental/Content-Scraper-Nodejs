@@ -48,6 +48,8 @@ var x = xRay();
 @param {requestCallback} response - the callback that handles the response
 @param {string} body - the body of the response
 */
+
+//The scraper should generate a folder called data if it doesn’t exist.
 function Scraper(url){
 
     EventEmitter.call(this);
