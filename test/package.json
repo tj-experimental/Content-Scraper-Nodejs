@@ -1,0 +1,14 @@
+{
+  "name": "scrapper",
+  "version": "1.0.0",
+  "description": "test",
+  "main": "scrap.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "TJ",
+  "license": "MIT",
+  "dependencies": {
+    "content_scraper": "file:///C:\\Users\\jtony\\Documents\\PROJECTS\\Content_Scraper"
+  }
+}
