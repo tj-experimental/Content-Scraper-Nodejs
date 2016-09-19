@@ -25,6 +25,7 @@ If the site is down, an error message describing the issue should appear in the 
 This is to be tested by disabling wifi on your device.
 
 If the data file for today already exists it should overwrite the file.
+
 Code should be well documented.*/
 //</editor-fold>
 
@@ -34,9 +35,15 @@ const fs = require('fs');
 const EventEmitter = require("events").EventEmitter;
 const util = require("util");
 
-//Use xray module or osmosis
+//Use x-ray module or osmosis for content scraping
+
+
+//json2csv to convert the json object to a csv file
+
 /*
 @param {string} url - The url of the site to scrape
+@param {requestCallback} response - the callback that handles the response
+@param {string} body - the body of the response
 */
 function Scraper(){
 
@@ -62,10 +69,8 @@ function Scraper(){
         response.on('end', function(){
         	if(response.statusCode === 200){
         		try{
-                  console.log(body);
                     scraperEmitter.emit('end', body);
         		}catch(error){
-                  console.error(error);
                     scraperEmitter.emit('error', error);
         		}
 
@@ -95,3 +100,10 @@ module.exports = Scraper;
 //When an error occurs log it to a file scraper-error.log .
 // It should append to the bottom of the file 
 //with a time stamp and error e.g. [Tue Feb 16 2016 10:02:12 GMT-0800 (PST)] <error message>
+
+
+
+/*
+* This callback is displayed as a global member
+* @callback requestCallback
+* */
