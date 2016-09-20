@@ -1,5 +1,7 @@
+'use strict';
+
 //<editor-fold desc="Description">
-/*The scraper should generate a folder called data if it doesn’t exist.
+/*---The scraper should generate a folder called data if it doesn’t exist.
 
 The information from the site should be stored in a CSV file with today’s day e.g. 2016-01-29.csv.
 
@@ -34,14 +36,15 @@ const http = require('http');
 const fs = require('fs');
 const EventEmitter = require("events").EventEmitter;
 const util = require("util");
-const xRay = require("x-ray");
-var x = xRay();
-
+const Xray = require("x-ray");
+const xRay = new Xray();
+var dir = './data';
+const json2csv = require('json2csv');
+const result = [];
 
 //Use x-ray module or osmosis for content scraping
 
 //json2csv to convert the json object to a csv file
-
 
 /*
 @param {string} url - The url of the site to scrape
@@ -49,9 +52,12 @@ var x = xRay();
 @param {string} body - the body of the response
 */
 
-//The scraper should generate a folder called data if it doesn’t exist.
-function Scraper(url){
 
+function Scraper(url){
+    //The scraper should generate a folder called data if it doesn’t exist.
+    if (!fs.existsSync(dir)){
+        fs.mkdirSync(dir);
+    }
     EventEmitter.call(this);
 
     var scraperEmitter = this;
@@ -59,48 +65,50 @@ function Scraper(url){
     if(typeof url !== 'string'){
         scraperEmitter.emit('error', new Error("The url type is not a string"));
     }
-
     if(url !== "" && typeof url === 'string') {
-        var request = http.get(url, function (response) {
-            var body = "";
-
-            if (response.statusCode !== 200) {
-                request.abort();
-                //Status Code Error
-                scraperEmitter.emit('error', new Error("There was an error getting data from "+ url +". (" + http.STATUS_CODES[response.statusCode] + ")"));
+        xRay(url, 'ul.products li',
+            [{
+              'title': 'img@alt',
+              'price': xRay('a@href', 'span.price').write('price.json'),
+              'image': 'img@src',
+              'href': 'a@href',
+              'time': null
+        }])(function(error, data){
+            var date = new Date();
+            if(error) {
+                scraperEmitter.emit('error', new Error(error));
             }
-
-            //Read the data
-            response.on('data', function (chunk) {
-                body += chunk;
-                scraperEmitter.emit("data", chunk);
+            if(typeof data !== 'object' || data == null) {
+                scraperEmitter.emit('error', new Error("The result isn't an object"));
+                return;
+            }
+            data.forEach(function (shirtData) {
+                xRay(shirtData['href'], 'span.price')(function (err, price) {
+                    if(err) throw err;
+                    shirtData['price'] = price;
+                });
+                shirtData['time'] = date.toLocaleTimeString('en-US');
+                result.push(shirtData);
             });
-
-            response.on('end', function () {
-                if (response.statusCode === 200) {
-                    try {
-                        scraperEmitter.emit('end', body);
-                    } catch (error) {
-                        scraperEmitter.emit('error', error);
-                    }
-
-                }
-            }).on("error", function (error) {
-                scraperEmitter.emit("error", error);
-            });
+            printOutResult(result);
         });
     }else{
         scraperEmitter.emit("error", new Error("The url string cannot be an empty string"));
     }
 }
 
-function parseNode(node) {
-    return {
-        title: node.get("title").text(),
-        link: node.get("link").text(),
-        publishDate: new Date(node.get("pubDate").text()),
-        author: node.get("creator").text()
-    }
+
+function printOutResult(result) {
+    var fields = ['title', 'price', 'image', 'href', 'time'];
+    var fieldNames = ['Title', 'Price', 'ImageURL', 'URL', 'Time'];
+    var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
+    var fileNameDate = new Date().toISOString().slice(0,10);
+    fs.writeFile( fileNameDate +'.csv', csv, function(err) {
+        if (err) {
+            throw err;
+        }
+        console.log('file saved');
+    });
 }
 
 
@@ -122,4 +130,5 @@ module.exports = Scraper;
 /*
 * This callback is displayed as a global member
 * @callback requestCallback
+* @exports Scraper
 * */

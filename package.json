@@ -4,6 +4,8 @@
   "description": "An npm Package for Node.js using a third party npm package to scrape content from the site. To create a csv file",
   "main": "scraper.js",
   "dependencies": {
+    "json2csv": "^3.7.0",
+    "scrape-it": "^3.2.0",
     "x-ray": "^2.3.0"
   },
   "devDependencies": {
