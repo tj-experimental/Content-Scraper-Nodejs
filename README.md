@@ -28,7 +28,6 @@ shirts4mikeScraper.on("error", console.error);
 ### Example of Returned Data
 
 ```javascript
-['title', 'price', 'image', 'href', 'time']
 [ 
   {    title: 'Mike the Frog Shirt, Orange',
        price: '$20',
