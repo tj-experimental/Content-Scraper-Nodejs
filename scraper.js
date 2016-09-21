@@ -19,6 +19,8 @@ Code documentation*/
  * Scraping module for shopping site.
  *
  *@name Scraper
+ *@function
+ *@param {String} url - The url of the site to scrape
  */
 
 const http = require('http');
