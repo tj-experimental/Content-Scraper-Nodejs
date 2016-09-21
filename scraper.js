@@ -1,26 +1,9 @@
 'use strict';
 
 //<editor-fold desc="Description">
-/*---The scraper should generate a folder called data if it doesn’t exist.
-
-The information from the site should be stored in a CSV file with today’s day e.g. 2016-01-29.csv.
-
-Use a third party npm package to scrape content from the site. 
-
-You should be able to explain why you chose that package.
-
-The scraper should be able to visit the website http://shirts4mike.com and follow links to all t-shirts.
-
-The scraper should get the price, title, url and image url from the product page and save it in the CSV.
-
+/*----
 Use a third party npm package to create an CSV file. 
 You should be able to explain why you chose that package.
-
-The column headers should be in in this order Title, Price, ImageURL, URL and Time. 
-
-Time should be the current date time of when the scrape happened. 
-
-If they aren’t in this order the can’t be entered into the database of the price comparison site.
 
 If the site is down, an error message describing the issue should appear in the console. 
 
@@ -28,15 +11,20 @@ This is to be tested by disabling wifi on your device.
 
 If the data file for today already exists it should overwrite the file.
 
-Code should be well documented.*/
+Code documentation*/
 //</editor-fold>
 
-/*
- @param {string} url - The url of the site to scrape
- @param {requestCallback} response - the callback that handles the response
- @param {string} body - the body of the response
+/**
+ * content-scraper
+ * Scraping module for shopping site.
+ *
+ *@name Scraper
+ *@function
+ *@param {String|Object} url - The url of the site to scrape
+ *@return {Object} data - the returned object
+ *@return {Object} newData - the returned object
+ *@param {String} dir - the location for the output
  */
-
 
 const http = require('http');
 const fs = require('fs');
