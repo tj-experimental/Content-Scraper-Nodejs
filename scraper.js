@@ -71,7 +71,7 @@ function Scraper(url){
               'time': '_'
         }])(function(error, data){
             if(error) {
-                scraperEmitter.emit('error', new Error(error));
+                scraperEmitter.emit('error', new Error(error.message));
             }
             if(typeof data !== 'object' || data == null) {
                 scraperEmitter.emit('error', new Error("The result isn't an object"));
@@ -115,7 +115,7 @@ function printOutResult(result) {
     var fieldNames = ['Title', 'Price ($)', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var fileNameDate = new Date().toISOString().slice(0,10);
-    fs.writeFile( fileNameDate +'.csv', csv, function(err) {
+    fs.writeFile( dir + '/'+ fileNameDate +'.csv', csv, function(err) {
         if(err)throw new Error (err.message);
         console.log('File saved Successfully');
     });
