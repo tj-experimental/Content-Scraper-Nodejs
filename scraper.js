@@ -19,11 +19,6 @@ Code documentation*/
  * Scraping module for shopping site.
  *
  *@name Scraper
- *@function
- *@param {String|Object} url - The url of the site to scrape
- *@return {Object} data - the returned object
- *@return {Object} newData - the returned object
- *@param {String} dir - the location for the output
  */
 
 const http = require('http');
