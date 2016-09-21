@@ -48,6 +48,8 @@ shirts4mikeScraper.on("error", console.error);
 
 ### Sample CSV
 
+#### `./data/yyyy-mm-dd.csv`
+
 ```csv
 Title	                    Price ($)	ImageURL	                                     URL	                                    Time
  Mike the Frog Shirt, Orange	$25	http://www.shirts4mike.com/img/shirts/shirt-108.jpg	http://www.shirts4mike.com/shirt.php?id=108	0:38:49
