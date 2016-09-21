@@ -34,15 +34,26 @@ shirts4mikeScraper.on("error", console.error);
        price: '$20',
        imageUrl: 'http://www.shirts4mike.com/img/shirts/shirt-108.jpg',
        href: 'http://www.shirts4mike.com/shirt.php?id=108',
-       time: '3:37:58 PM'
+       time: '0:37:58'
   },
   {    title: 'Mike the Frog Shirt, Orange',
        price: '$20',
        imageUrl: 'http://www.shirts4mike.com/img/shirts/shirt-108.jpg',
        href: 'http://www.shirts4mike.com/shirt.php?id=108',
-       time: '3:37:58 PM'
+       time: '0:37:58'
   },
 ]
 ```
 
 `title`, `price`, `url` and `imageURL` are `strings` and `time` is a JavaScript `Date` object.
+
+### Sample CSV
+
+```csv
+Title	                    Price ($)	ImageURL	                                     URL	                                    Time
+ Mike the Frog Shirt, Orange	$25	http://www.shirts4mike.com/img/shirts/shirt-108.jpg	http://www.shirts4mike.com/shirt.php?id=108	0:38:49
+ Logo Shirt, Teal	            $20	http://www.shirts4mike.com/img/shirts/shirt-107.jpg	http://www.shirts4mike.com/shirt.php?id=107	0:38:49
+ Mike the Frog Shirt, Yellow	$25	http://www.shirts4mike.com/img/shirts/shirt-105.jpg	http://www.shirts4mike.com/shirt.php?id=105	0:38:49
+ Logo Shirt, Gray	            $20	http://www.shirts4mike.com/img/shirts/shirt-106.jpg	http://www.shirts4mike.com/shirt.php?id=106	0:38:49
+
+```
