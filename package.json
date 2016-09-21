@@ -8,7 +8,9 @@
     "x-ray": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "~3.5.0"
+    "eslint": "~3.5.0",
+    "mocha": "^3.0.2",
+    "uglify-js": "^2.7.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
