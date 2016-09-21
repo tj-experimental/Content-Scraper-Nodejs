@@ -51,10 +51,10 @@ shirts4mikeScraper.on("error", console.error);
 #### `./data/yyyy-mm-dd.csv`
 
 ```csv
-Title	                    Price ($)	ImageURL	                                     URL	                                    Time
- Mike the Frog Shirt, Orange	$25	http://www.shirts4mike.com/img/shirts/shirt-108.jpg	http://www.shirts4mike.com/shirt.php?id=108	0:38:49
- Logo Shirt, Teal	            $20	http://www.shirts4mike.com/img/shirts/shirt-107.jpg	http://www.shirts4mike.com/shirt.php?id=107	0:38:49
- Mike the Frog Shirt, Yellow	$25	http://www.shirts4mike.com/img/shirts/shirt-105.jpg	http://www.shirts4mike.com/shirt.php?id=105	0:38:49
- Logo Shirt, Gray	            $20	http://www.shirts4mike.com/img/shirts/shirt-106.jpg	http://www.shirts4mike.com/shirt.php?id=106	0:38:49
+Title	                      Price ($)	ImageURL	                                         URL	                                    Time
+ Mike the Frog Shirt, Orange	$25	    http://www.shirts4mike.com/img/shirts/shirt-108.jpg	http://www.shirts4mike.com/shirt.php?id=108	0:38:49
+ Logo Shirt, Teal	            $20	    http://www.shirts4mike.com/img/shirts/shirt-107.jpg	http://www.shirts4mike.com/shirt.php?id=107	0:38:49
+ Mike the Frog Shirt, Yellow	$25	    http://www.shirts4mike.com/img/shirts/shirt-105.jpg	http://www.shirts4mike.com/shirt.php?id=105	0:38:49
+ Logo Shirt, Gray	            $20	    http://www.shirts4mike.com/img/shirts/shirt-106.jpg	http://www.shirts4mike.com/shirt.php?id=106	0:38:49
 
 ```
