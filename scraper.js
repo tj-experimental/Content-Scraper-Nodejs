@@ -31,26 +31,22 @@ If the data file for today already exists it should overwrite the file.
 Code should be well documented.*/
 //</editor-fold>
 
+/*
+ @param {string} url - The url of the site to scrape
+ @param {requestCallback} response - the callback that handles the response
+ @param {string} body - the body of the response
+ */
+
 
 const http = require('http');
 const fs = require('fs');
 const EventEmitter = require("events").EventEmitter;
 const util = require("util");
 const Xray = require("x-ray");
-const xRay = new Xray();
+const xRay = Xray();
 var dir = './data';
 const json2csv = require('json2csv');
-const result = [];
 
-//Use x-ray module or osmosis for content scraping
-
-//json2csv to convert the json object to a csv file
-
-/*
-@param {string} url - The url of the site to scrape
-@param {requestCallback} response - the callback that handles the response
-@param {string} body - the body of the response
-*/
 
 
 function Scraper(url){
@@ -68,13 +64,12 @@ function Scraper(url){
     if(url !== "" && typeof url === 'string') {
         xRay(url, 'ul.products li',
             [{
-              'title': 'img@alt',
-              'price': xRay('a@href', 'span.price').write('price.json'),
-              'image': 'img@src',
+              'title': '_',
+              'price': '_',
+              'imageUrl': '_',
               'href': 'a@href',
-              'time': null
+              'time': '_'
         }])(function(error, data){
-            var date = new Date();
             if(error) {
                 scraperEmitter.emit('error', new Error(error));
             }
@@ -82,32 +77,47 @@ function Scraper(url){
                 scraperEmitter.emit('error', new Error("The result isn't an object"));
                 return;
             }
-            data.forEach(function (shirtData) {
-                xRay(shirtData['href'], 'span.price')(function (err, price) {
-                    if(err) throw err;
-                    shirtData['price'] = price;
-                });
-                shirtData['time'] = date.toLocaleTimeString('en-US');
-                result.push(shirtData);
+            data.forEach(function (shirt) {
+                var now = new Date();
+                xRay(shirt['href'], 'div.section.page',
+                    {
+                        'title': '.shirt-details h1',
+                        'price': 'span.price',
+                        'imageUrl': '.shirt-picture img@src'
+                    })(function (err, newData) {
+                        if(err){scraperEmitter.emit('error', "Error scraping page :" + shirt['href']);}
+                        shirt.title = newData.title.replace(/(\$+)([0-9]+)/g, "");
+                        shirt.price = newData['price'];
+                        shirt.imageUrl = newData['imageUrl'];
+                        shirt.time = now.toLocaleTimeString('en-US', {hour12: false});
+                        addResult(shirt, data.length);
+                    });
             });
-            printOutResult(result);
         });
     }else{
         scraperEmitter.emit("error", new Error("The url string cannot be an empty string"));
     }
 }
 
+var i = 0;
+var result = [];
+
+function addResult(shirt, length) {
+    result.push(shirt);
+    i++;
+    if(i == length){
+        printOutResult(result);
+    }
+}
 
 function printOutResult(result) {
-    var fields = ['title', 'price', 'image', 'href', 'time'];
-    var fieldNames = ['Title', 'Price', 'ImageURL', 'URL', 'Time'];
+    var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
+    var fieldNames = ['Title', 'Price ($)', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var fileNameDate = new Date().toISOString().slice(0,10);
     fs.writeFile( fileNameDate +'.csv', csv, function(err) {
-        if (err) {
-            throw err;
-        }
-        console.log('file saved');
+        if(err)throw new Error (err.message);
+        console.log('File saved Successfully');
     });
 }
 
@@ -132,3 +142,56 @@ module.exports = Scraper;
 * @callback requestCallback
 * @exports Scraper
 * */
+
+
+
+// // Callback interface
+// scrapeIt("http://ionicabizau.net", {
+//         // Fetch the articles
+//         articles: {
+//             listItem: ".article"
+//             , data: {
+//
+//                 // Get the article date and convert it into a Date object
+//                 createdAt: {
+//                     selector: ".date",
+//                     convert: x => new Date(x)
+//             }
+//
+//             // Get the title
+//             , title: "a.article-title"
+//
+//             // Nested list
+//             , tags: {
+//                 listItem: ".tags > span"
+//             }
+//
+//             // Get the content
+//             , content: {
+//                 selector: ".article-content"
+//                 , how: "html"
+//             }
+//         }
+//     },// Fetch the blog pages
+//         pages : {
+//             listItem: "li.page",
+//                 name: "pages",
+//                 data: {
+//                       title: "a",
+//                       url: {
+//                       selector: "a",
+//                       attr: "href"
+//                 }
+//             }
+//         },
+//         // Fetch some other data from the page
+//      title: ".header h1"
+//             , desc: ".header h2"
+//             , avatar: {
+//             selector: ".header img"
+//                 , attr: "src"
+//         }
+//     }, (err, page) => {
+//             console.log(err || page);
+//         });
+//
