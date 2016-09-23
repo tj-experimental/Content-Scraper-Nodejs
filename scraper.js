@@ -22,8 +22,8 @@ var log = new Log('error', fs.createWriteStream('./scraper-error.log'));
 
 function Scraper(url){
     //The scraper should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync(__dirname + dataDir)){
-        fs.mkdirSync(__dirname + dataDir);
+    if (!fs.existsSync('.' + dataDir)){
+        fs.mkdirSync('.' + dataDir);
     }
     EventEmitter.call(this);
 
@@ -97,7 +97,7 @@ function printOutResult(result) {
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var fileNameDate = new Date().toISOString().slice(0,10);
-    fs.writeFile( __dirname + dataDir + '/'+ fileNameDate +'.csv', csv, function(err) {
+    fs.writeFile('.' + dataDir + '/'+ fileNameDate +'.csv', csv, function(err) {
         if(err){
             log.error('Error Writing to file %s %s', fileNameDate, err.message);
             throw new Error (err);
