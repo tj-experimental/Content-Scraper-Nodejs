@@ -5,6 +5,7 @@
   "main": "scraper.js",
   "dependencies": {
     "json2csv": "^3.7.0",
+    "log": "^1.4.0",
     "x-ray": "^2.3.0"
   },
   "devDependencies": {
@@ -13,7 +14,8 @@
     "uglify-js": "^2.7.3"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "lint": "eslint scraper.js"
   },
   "repository": {
     "type": "git",

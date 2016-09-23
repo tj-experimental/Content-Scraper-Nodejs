@@ -1,19 +1,4 @@
 'use strict';
-
-//<editor-fold desc="Description">
-/*----
-Use a third party npm package to create an CSV file. 
-You should be able to explain why you chose that package.
-
-If the site is down, an error message describing the issue should appear in the console. 
-
-This is to be tested by disabling wifi on your device.
-
-If the data file for today already exists it should overwrite the file.
-
-Code documentation*/
-//</editor-fold>
-
 /**
  * content-scraper
  * Scraping module for shopping site.
@@ -23,44 +8,50 @@ Code documentation*/
  *@param {String} url - The url of the site to scrape
  */
 
-const http = require('http');
-const fs = require('fs');
-const EventEmitter = require("events").EventEmitter;
-const util = require("util");
-const Xray = require("x-ray");
-const xRay = Xray();
-var dir = './data';
-const json2csv = require('json2csv');
+var fs = require("fs");
+var EventEmitter = require("events").EventEmitter;
+var util = require("util");
+var Xray = require("x-ray");
+var xRay = Xray();
+var dataDir = "/data";
+var json2csv = require("json2csv");
+var Log = require('log');
+var log = new Log('error', fs.createWriteStream('./scraper-error.log'));
 
 
 
 function Scraper(url){
     //The scraper should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync(dir)){
-        fs.mkdirSync(dir);
+    if (!fs.existsSync(__dirname + dataDir)){
+        fs.mkdirSync(__dirname + dataDir);
     }
     EventEmitter.call(this);
 
     var scraperEmitter = this;
-
+    //Check if the url is of type string
     if(typeof url !== 'string'){
-        scraperEmitter.emit('error', new Error("The url type is not a string"));
+        scraperEmitter.emit('error', new Error('The url is not a string '));
+        log.info('The url is not a string ');
+        throw new Error ("The url is not a string ");
     }
+    //If the url is not empty and has a type of string
     if(url !== "" && typeof url === 'string') {
         xRay(url, 'ul.products li',
             [{
-              'title': '_',
-              'price': '_',
-              'imageUrl': '_',
+              'title': undefined,
+              'price': undefined,
+              'imageUrl': undefined,
               'href': 'a@href',
-              'time': '_'
+              'time': undefined
         }])(function(error, data){
             if(error) {
-                scraperEmitter.emit('error', new Error(error.message));
+                log.error(error.message);
+                scraperEmitter.emit('error', new Error(error));
             }
             if(typeof data !== 'object' || data == null) {
+                log.error('The return data isn\'t a object or is null ');
                 scraperEmitter.emit('error', new Error("The result isn't an object"));
-                return;
+                return 1;
             }
             data.forEach(function (shirt) {
                 var now = new Date();
@@ -70,17 +61,23 @@ function Scraper(url){
                         'price': 'span.price',
                         'imageUrl': '.shirt-picture img@src'
                     })(function (err, newData) {
-                        if(err){scraperEmitter.emit('error', "Error scraping page :" + shirt['href']);}
+                        if(err){
+                            log.error(err, err.message);
+                            scraperEmitter.emit('error', err.message);
+                        }
                         shirt.title = newData.title.replace(/(\$+)([0-9]+)/g, "");
                         shirt.price = newData['price'];
                         shirt.imageUrl = newData['imageUrl'];
                         shirt.time = now.toLocaleTimeString('en-US', {hour12: false});
-                        addResult(shirt, data.length);
+                        addResult(shirt, data.length, scraperEmitter);
                     });
             });
         });
     }else{
-        scraperEmitter.emit("error", new Error("The url string cannot be an empty string"));
+        scraperEmitter.emit('error', new Error('The url string is empty '));
+        log.info('The url string is empty ');
+        //scraperEmitter.emit("error", new Error("The url string cannot be an empty string"));
+        throw new Error ('The url string is empty ');
     }
 }
 
@@ -90,18 +87,21 @@ var result = [];
 function addResult(shirt, length) {
     result.push(shirt);
     i++;
-    if(i == length){
+    if(i === length){
         printOutResult(result);
     }
 }
 
 function printOutResult(result) {
     var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
-    var fieldNames = ['Title', 'Price ($)', 'ImageURL', 'URL', 'Time'];
+    var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var fileNameDate = new Date().toISOString().slice(0,10);
-    fs.writeFile( dir + '/'+ fileNameDate +'.csv', csv, function(err) {
-        if(err)throw new Error (err.message);
+    fs.writeFile( __dirname + dataDir + '/'+ fileNameDate +'.csv', csv, function(err) {
+        if(err){
+            log.error('Error Writing to file %s %s', fileNameDate, err.message);
+            throw new Error (err);
+        }
         console.log('File saved Successfully');
     });
 }
@@ -111,15 +111,10 @@ util.inherits(Scraper, EventEmitter);
 
 module.exports = Scraper;
 
-//Error File name scraper-error.log
+//Error File name
 //use eslint for error writing to output file using the current Date and Time to append the error to the output file
-
 //Use a linting tool like ESLint to check your code for syntax errors and 
 //to ensure general code quality. You should be able to run npm run lint to check your code.
-//When an error occurs log it to a file scraper-error.log .
-// It should append to the bottom of the file 
-//with a time stamp and error e.g. [Tue Feb 16 2016 10:02:12 GMT-0800 (PST)] <error message>
-
 
 
 /*
@@ -127,56 +122,3 @@ module.exports = Scraper;
 * @callback requestCallback
 * @exports Scraper
 * */
-
-
-
-// // Callback interface
-// scrapeIt("http://ionicabizau.net", {
-//         // Fetch the articles
-//         articles: {
-//             listItem: ".article"
-//             , data: {
-//
-//                 // Get the article date and convert it into a Date object
-//                 createdAt: {
-//                     selector: ".date",
-//                     convert: x => new Date(x)
-//             }
-//
-//             // Get the title
-//             , title: "a.article-title"
-//
-//             // Nested list
-//             , tags: {
-//                 listItem: ".tags > span"
-//             }
-//
-//             // Get the content
-//             , content: {
-//                 selector: ".article-content"
-//                 , how: "html"
-//             }
-//         }
-//     },// Fetch the blog pages
-//         pages : {
-//             listItem: "li.page",
-//                 name: "pages",
-//                 data: {
-//                       title: "a",
-//                       url: {
-//                       selector: "a",
-//                       attr: "href"
-//                 }
-//             }
-//         },
-//         // Fetch some other data from the page
-//      title: ".header h1"
-//             , desc: ".header h2"
-//             , avatar: {
-//             selector: ".header img"
-//                 , attr: "src"
-//         }
-//     }, (err, page) => {
-//             console.log(err || page);
-//         });
-//
