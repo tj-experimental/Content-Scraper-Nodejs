@@ -14,9 +14,15 @@ The csv file column headers Title, Price, ImageURL, URL and Time .
 ```javascript
 var Scraper = require("content_scraper");
 
-var url = "http://google.com";
+var url = "http://www.shirts4mike.com/";
 
 var shirts4mikeScraper = new Scraper(url);
+
+/**
+* When the "end" event is triggered an array of shirt
+* metadata is returned
+**/
+shirts4mikeScraper.on("end", console.dir);
 
 /**
 * If a parsing, network or HTTP error occurs an

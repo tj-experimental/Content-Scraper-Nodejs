@@ -83,10 +83,11 @@ function Scraper(url){
 var i = 0;
 var result = [];
 
-function addResult(shirt, length) {
+function addResult(shirt, length, scraperEmitter) {
     result.push(shirt);
     i++;
     if(i === length){
+        scraperEmitter.emit('end', result);
         printOutResult(result);
     }
 }
