@@ -45,8 +45,8 @@ function Scraper(url){
                 'time': undefined
         }])(function(error, data){
             if(error) {
-                log.error( error.errno + ' ' + error.syscall + ' ' + error.message + os.EOL);
-                scraperEmitter.emit('error', new Error( error.errno +' '+ error.syscall + ' '+ error.message));
+                log.error( error.errno + ' ' + error.syscall +' Check connection: '+ error.message + os.EOL);
+                scraperEmitter.emit('error', new Error(error.errno+' '+error.syscall+' Check connection: '+error.message));
             }
             if(typeof data !== 'object' || data == null) {
                 log.info('The return data isn\'t an object or is null' + os.EOL);
@@ -99,7 +99,7 @@ function printOutResult(result) {
     var fileNameDate = new Date().toISOString().slice(0,10);
     fs.writeFile('.' + dataDir + '/'+ fileNameDate +'.csv', csv, function(err) {
         if(err){
-            log.error('Writing to file %s %s ' + os.EOL + fileNameDate, err.message);
+            log.error('Writing to file %s %s ' + os.EOL , fileNameDate, err.message);
             throw new Error (err);
         }
         log2.info('File saved Successfully');
