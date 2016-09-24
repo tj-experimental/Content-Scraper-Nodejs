@@ -12,7 +12,6 @@ var fs = require("fs");
 var EventEmitter = require("events").EventEmitter;
 var util = require("util");
 var os = require("os");
-var http = require("http");
 var Xray = require("x-ray");
 var xRay = Xray();
 var dataDir = "/data";
@@ -47,8 +46,8 @@ function Scraper(url){
               'time': undefined
         }])(function(error, data){
             if(error) {
-                log.error(error.code + error.errno + error.message + os.EOL);
-                scraperEmitter.emit('error', new Error(error.code + error.errno + error.message));
+                log.error( error.errno + ' ' + error.syscall + ' ' + error.message + os.EOL);
+                scraperEmitter.emit('error', new Error( error.errno +' '+ error.syscall + ' '+ error.message));
             }
             if(typeof data !== 'object' || data == null) {
                 log.info('The return data isn\'t an object or is null' + os.EOL);
