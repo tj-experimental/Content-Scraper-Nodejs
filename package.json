@@ -10,12 +10,12 @@
   },
   "devDependencies": {
     "eslint": "~3.5.0",
-    "mocha": "^3.0.2",
     "uglify-js": "^2.7.3"
   },
   "scripts": {
-    "test": "mocha",
-    "lint": "eslint scraper.js"
+    "test": "npm run lint",
+    "lint": "eslint scraper.js",
+    "build": "npm run lint && npm version patch"
   },
   "repository": {
     "type": "git",
