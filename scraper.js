@@ -45,6 +45,7 @@ function Scraper(url){
                 'time': undefined
         }])(function(error, data){
             if(error) {
+                log2.alert('An Error occurred while retrieving contents from %s. Check the scraper-error.log for more information',url);
                 log.error( error.errno + ' ' + error.syscall +' Check connection: '+ error.message + os.EOL);
                 scraperEmitter.emit('error', new Error(error.errno+' '+error.syscall+' Check connection: '+error.message));
             }
