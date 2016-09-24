@@ -88,7 +88,7 @@ function addResult(shirt, length, scraperEmitter) {
     result.push(shirt);
     i++;
     if(i === length){
-        scraperEmitter.emit('end', 'Content Scraped Successfully');
+        scraperEmitter.emit('end', result);
         printOutResult(result);
     }
 }
