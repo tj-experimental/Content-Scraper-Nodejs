@@ -8,18 +8,18 @@
  *@param {String} url - The url of the site to scrape
  */
 
-var fs = require("fs");
-var EventEmitter = require("events").EventEmitter;
-var util = require("util");
-var os = require("os");
-var Xray = require("x-ray");
+var fs = require('fs');
+var EventEmitter = require('events').EventEmitter;
+var util = require('util');
+var os = require('os');
+var Xray = require('x-ray');
 var xRay = Xray();
-var dataDir = "/data";
-var json2csv = require("json2csv");
+var dataDir = '/data';
+var json2csv = require('json2csv');
 var Log = require('log');
 var errorStream = fs.createWriteStream('./scraper-error.log', {flags: 'a'});
 var log = new Log('debug', errorStream);
-var error = false;
+var log2 = new Log('info');
 
 
 function Scraper(url){
@@ -33,17 +33,16 @@ function Scraper(url){
     //Check if the url is of type string
     if ('string' !== typeof url) {
         scraperEmitter.emit('error', new Error('The url is not a string '));
-        throw new Error("The url is not a string ");
+        throw new Error('The url is not a string ');
     }
     //If the url is not empty and has a type of string
-    if(url !== "" && typeof url === 'string') {
+    if(url !== '' && typeof url === 'string') {
         xRay(url, 'ul.products li',
-            [{
-              'title': undefined,
-              'price': undefined,
-              'imageUrl': undefined,
-              'href': 'a@href',
-              'time': undefined
+            [{'title': undefined,
+                'price': undefined,
+                'imageUrl': undefined,
+                'href': 'a@href',
+                'time': undefined
         }])(function(error, data){
             if(error) {
                 log.error( error.errno + ' ' + error.syscall + ' ' + error.message + os.EOL);
@@ -51,7 +50,7 @@ function Scraper(url){
             }
             if(typeof data !== 'object' || data == null) {
                 log.info('The return data isn\'t an object or is null' + os.EOL);
-                scraperEmitter.emit('error', new Error("The result isn't an object"));
+                scraperEmitter.emit('error', new Error('The result isn\'t an object'));
                 return 1;
             }
             data.forEach(function (shirt) {
@@ -66,7 +65,7 @@ function Scraper(url){
                             log.error(err, err.message + os.EOL);
                             scraperEmitter.emit('error', err.message);
                         }
-                        shirt.title = newData.title.replace(/(\$+)([0-9]+)/g, "");
+                        shirt.title = newData.title.replace(/(\$+)([0-9]+)/g, '');
                         shirt.price = newData['price'];
                         shirt.imageUrl = newData['imageUrl'];
                         shirt.time = now.toLocaleTimeString('en-US', {hour12: false});
@@ -99,10 +98,10 @@ function printOutResult(result) {
     var fileNameDate = new Date().toISOString().slice(0,10);
     fs.writeFile('.' + dataDir + '/'+ fileNameDate +'.csv', csv, function(err) {
         if(err){
-            log.error('Writing to file %s %s ' + os.EOL, __dirname + fileNameDate, err.message);
+            log.error('Writing to file %s %s ' + os.EOL + fileNameDate, err.message);
             throw new Error (err);
         }
-        console.log('File saved Successfully');
+        log2('File saved Successfully');
     });
 }
 
