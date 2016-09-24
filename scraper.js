@@ -11,13 +11,16 @@
 var fs = require("fs");
 var EventEmitter = require("events").EventEmitter;
 var util = require("util");
+var os = require("os");
+var http = require("http");
 var Xray = require("x-ray");
 var xRay = Xray();
 var dataDir = "/data";
 var json2csv = require("json2csv");
 var Log = require('log');
-var log = new Log('error', fs.createWriteStream('./scraper-error.log'));
-
+var errorStream = fs.createWriteStream('./scraper-error.log', {flags: 'a'});
+var log = new Log('debug', errorStream);
+var error = false;
 
 
 function Scraper(url){
@@ -29,10 +32,9 @@ function Scraper(url){
 
     var scraperEmitter = this;
     //Check if the url is of type string
-    if(typeof url !== 'string'){
+    if ('string' !== typeof url) {
         scraperEmitter.emit('error', new Error('The url is not a string '));
-        log.info('The url is not a string ');
-        throw new Error ("The url is not a string ");
+        throw new Error("The url is not a string ");
     }
     //If the url is not empty and has a type of string
     if(url !== "" && typeof url === 'string') {
@@ -45,11 +47,11 @@ function Scraper(url){
               'time': undefined
         }])(function(error, data){
             if(error) {
-                log.error(error.message);
-                scraperEmitter.emit('error', new Error(error));
+                log.error(error.code + error.errno + error.message + os.EOL);
+                scraperEmitter.emit('error', new Error(error.code + error.errno + error.message));
             }
             if(typeof data !== 'object' || data == null) {
-                log.error('The return data isn\'t a object or is null ');
+                log.info('The return data isn\'t an object or is null' + os.EOL);
                 scraperEmitter.emit('error', new Error("The result isn't an object"));
                 return 1;
             }
@@ -62,7 +64,7 @@ function Scraper(url){
                         'imageUrl': '.shirt-picture img@src'
                     })(function (err, newData) {
                         if(err){
-                            log.error(err, err.message);
+                            log.error(err, err.message + os.EOL);
                             scraperEmitter.emit('error', err.message);
                         }
                         shirt.title = newData.title.replace(/(\$+)([0-9]+)/g, "");
@@ -75,8 +77,6 @@ function Scraper(url){
         });
     }else{
         scraperEmitter.emit('error', new Error('The url string is empty '));
-        log.info('The url string is empty ');
-        //scraperEmitter.emit("error", new Error("The url string cannot be an empty string"));
         throw new Error ('The url string is empty ');
     }
 }
@@ -99,7 +99,7 @@ function printOutResult(result) {
     var fileNameDate = new Date().toISOString().slice(0,10);
     fs.writeFile('.' + dataDir + '/'+ fileNameDate +'.csv', csv, function(err) {
         if(err){
-            log.error('Error Writing to file %s %s', fileNameDate, err.message);
+            log.error('Writing to file %s %s ' + os.EOL, __dirname + fileNameDate, err.message);
             throw new Error (err);
         }
         console.log('File saved Successfully');
