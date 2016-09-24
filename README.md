@@ -22,7 +22,7 @@ var shirts4mikeScraper = new Scraper(url);
 * When the "end" event is triggered an array of shirt
 * metadata is returned
 **/
-shirts4mikeScraper.on("end", console.dir);
+shirts4mikeScraper.on("end", console.log);
 
 /**
 * If a parsing, network or HTTP error occurs an

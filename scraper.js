@@ -74,6 +74,7 @@ function Scraper(url){
             });
         });
     }else{
+        log2.info('The url string is empty ');
         scraperEmitter.emit('error', new Error('The url string is empty '));
         throw new Error ('The url string is empty ');
     }
@@ -86,7 +87,7 @@ function addResult(shirt, length, scraperEmitter) {
     result.push(shirt);
     i++;
     if(i === length){
-        scraperEmitter.emit('end', result);
+        scraperEmitter.emit('end', "Content Scraped");
         printOutResult(result);
     }
 }
@@ -101,7 +102,7 @@ function printOutResult(result) {
             log.error('Writing to file %s %s ' + os.EOL + fileNameDate, err.message);
             throw new Error (err);
         }
-        log2('File saved Successfully');
+        log2.info('File saved Successfully');
     });
 }
 
