@@ -94,7 +94,7 @@ function addResult(shirt, length, scraperEmitter) {
 }
 
 
-Scraper.prototype.print = function (result, location) {
+var Print = function (result, location) {
 
     var datalocation = location || defaultLocation;
 
@@ -121,6 +121,7 @@ Scraper.prototype.print = function (result, location) {
 util.inherits(Scraper, EventEmitter);
 
 module.exports = Scraper;
+module.exports.print = Print;
 
 //Error File name
 //use eslint for error writing to output file using the current Date and Time to append the error to the output file
