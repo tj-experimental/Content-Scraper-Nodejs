@@ -23,13 +23,15 @@ var log2 = new Log('info');
 
 
 function Scraper(url){
-    //The scraper should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync('.' + dataDir)){
-        fs.mkdirSync('.' + dataDir);
-    }
     EventEmitter.call(this);
 
     var scraperEmitter = this;
+
+    //The scraper should generate a folder called data if it doesn’t exist.
+    if (!fs.existsSync(scraperEmitter.cwd() + dataDir)){
+        fs.mkdirSync(scraperEmitter.cwd() + dataDir);
+    }
+
     //Check if the url is of type string
     if ('string' !== typeof url) {
         scraperEmitter.emit('error', new Error('The url is not a string '));
