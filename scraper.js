@@ -25,7 +25,7 @@ var log2 = new Log('info');
 var defaultLocation =  process.cwd();
 
 
-function scrape(url){
+var scrape = function (url){
     EventEmitter.call(this);
 
     var scraperEmitter = this;
@@ -80,7 +80,7 @@ function scrape(url){
         scraperEmitter.emit('error', new Error('The url string is empty '));
         throw new Error ('The url string is empty ');
     }
-}
+};
 
 var i = 0;
 var result = [];
