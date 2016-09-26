@@ -9,12 +9,13 @@
     "x-ray": "^2.3.0"
   },
   "devDependencies": {
-    "eslint": "~3.5.0",
+    "eslint": "^3.6.0",
     "uglify-js": "^2.7.3"
   },
   "scripts": {
     "test": "npm run lint",
     "lint": "eslint scraper.js",
+    "initialize": "eslint --init",
     "build": "npm run lint && npm version patch"
   },
   "repository": {
