@@ -28,8 +28,8 @@ function Scraper(url){
     var scraperEmitter = this;
 
     //The scraper should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync(this.cwd() + dataDir)){
-        fs.mkdirSync(this.cwd() + dataDir);
+    if (!fs.existsSync(this.cwd + dataDir)){
+        fs.mkdirSync(this.cwd + dataDir);
     }
 
     //Check if the url is of type string
