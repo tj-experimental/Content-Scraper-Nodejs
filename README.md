@@ -18,11 +18,17 @@ var url = "http://www.shirts4mike.com/";
 
 var shirts4mikeScraper = new Scraper(url);
 
+var print = Scraper.print;
+
 /**
 * When the "end" event is triggered an array of shirt
 * metadata is returned
 **/
-shirts4mikeScraper.on("end", console.log);
+shirts4mikeScraper.on("end", function(result){
+	  //To view result in console
+	  //console.dir(result);
+	   print(result);
+});
 
 /**
 * If a parsing, network or HTTP error occurs an
