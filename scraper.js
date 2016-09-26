@@ -6,6 +6,7 @@
  *@name Scraper
  *@function
  *@param {String} url - The url of the site to scrape
+ *@global process
  */
 
 var fs = require('fs');
@@ -20,6 +21,8 @@ var Log = require('log');
 var errorStream = fs.createWriteStream('./scraper-error.log', {flags: 'a'});
 var log = new Log('debug', errorStream);
 var log2 = new Log('info');
+/* global process */
+var defaultLocation =  process.cwd();
 
 
 function Scraper(url){
@@ -27,10 +30,6 @@ function Scraper(url){
 
     var scraperEmitter = this;
 
-    //The scraper should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync(this.cwd + dataDir)){
-        fs.mkdirSync(this.cwd + dataDir);
-    }
 
     //Check if the url is of type string
     if ('string' !== typeof url) {
@@ -97,12 +96,18 @@ function addResult(shirt, length, scraperEmitter) {
 
 Scraper.prototype.print = function (result, location) {
 
+    var datalocation = location || defaultLocation;
+
+    //The scraper should generate a folder called data if it doesn’t exist.
+    if (!fs.existsSync(datalocation + dataDir)){
+        fs.mkdirSync(datalocation + dataDir);
+    }
+
     var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var fileNameDate = new Date().toISOString().slice(0,10);
-    var outputLocation =  location || this.cwd + dataDir;
-    fs.writeFile(outputLocation + dataDir + '/'+ fileNameDate + '.csv', csv, function(err) {
+    fs.writeFile(datalocation + dataDir + '/'+ fileNameDate + '.csv', csv, function(err) {
         if(err){
             log.error('Writing to file %s %s ' + os.EOL , fileNameDate, err.message);
             this.emit('error', err.message);
