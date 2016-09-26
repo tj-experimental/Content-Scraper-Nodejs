@@ -28,8 +28,8 @@ function Scraper(url){
     var scraperEmitter = this;
 
     //The scraper should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync(scraperEmitter.cwd() + dataDir)){
-        fs.mkdirSync(scraperEmitter.cwd() + dataDir);
+    if (!fs.existsSync(this.cwd() + dataDir)){
+        fs.mkdirSync(this.cwd() + dataDir);
     }
 
     //Check if the url is of type string
@@ -91,23 +91,26 @@ function addResult(shirt, length, scraperEmitter) {
     i++;
     if(i === length){
         scraperEmitter.emit('end', result);
-        printOutResult(result);
     }
 }
 
-function printOutResult(result) {
+
+Scraper.prototype.print = function (result, location) {
+
     var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var fileNameDate = new Date().toISOString().slice(0,10);
-    fs.writeFile('.' + dataDir + '/'+ fileNameDate +'.csv', csv, function(err) {
+    var outputLocation =  location || this.cwd + dataDir;
+    fs.writeFile(outputLocation + dataDir + '/'+ fileNameDate + '.csv', csv, function(err) {
         if(err){
             log.error('Writing to file %s %s ' + os.EOL , fileNameDate, err.message);
+            this.emit('error', err.message);
             throw new Error (err);
         }
         log2.info('File saved Successfully');
     });
-}
+};
 
 
 util.inherits(Scraper, EventEmitter);
