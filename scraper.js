@@ -3,7 +3,7 @@
  * content-scraper
  * Scraping module for shopping site.
  *
- *@name scraper
+ *@name scrape
  *@function
  *@param {String} url - The url of the site to scrape
  *@global process
@@ -18,14 +18,14 @@ var xRay = Xray();
 var dataDir = '/data';
 var json2csv = require('json2csv');
 var Log = require('log');
-var errorStream = fs.createWriteStream('./scraper-error.log', {flags: 'a'});
+var errorStream = fs.createWriteStream('./scrape-error.log', {flags: 'a'});
 var log = new Log('debug', errorStream);
 var log2 = new Log('info');
 /* global process */
 var defaultLocation =  process.cwd();
 
 
-function scraper(url){
+function scrape(url){
     EventEmitter.call(this);
 
     var scraperEmitter = this;
@@ -46,7 +46,7 @@ function scraper(url){
                 'time': undefined
         }])(function(error, data){
             if(error) {
-                log2.alert('An Error occurred while retrieving contents from %s. Check the scraper-error.log for more information',url);
+                log2.alert('An Error occurred while retrieving contents from %s. Check the scrape-error.log for more information',url);
                 log.error( error.errno + ' ' + error.syscall +' Check connection: '+ error.message + os.EOL);
                 scraperEmitter.emit('error', new Error(error.errno+' '+error.syscall+' Check connection: '+error.message));
             }
@@ -96,7 +96,7 @@ function addResult(shirt, length, scraperEmitter) {
 
 var print = function (result) {
 
-    //The scraper should generate a folder called data if it doesn’t exist.
+    //The scrape should generate a folder called data if it doesn’t exist.
     if (!fs.existsSync(defaultLocation + dataDir)){
         fs.mkdirSync(defaultLocation + dataDir);
     }
@@ -116,9 +116,9 @@ var print = function (result) {
 };
 
 
-util.inherits(scraper, EventEmitter);
+util.inherits(scrape, EventEmitter);
 
-module.exports = { scraper, print };
+module.exports = { scrape, print };
 
 //Error File name
 //use eslint for error writing to output file using the current Date and Time to append the error to the output file
@@ -129,5 +129,5 @@ module.exports = { scraper, print };
 /*
 * This callback is displayed as a global member
 * @callback requestCallback
-* @exports scraper
+* @exports scrape
 * */
