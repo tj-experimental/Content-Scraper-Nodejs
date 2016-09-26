@@ -94,26 +94,24 @@ function addResult(shirt, length, scraperEmitter) {
 }
 
 
-var Print = function (result, location) {
-
-    var datalocation = location || defaultLocation;
+var Print = function (result) {
 
     //The scraper should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync(datalocation + dataDir)){
-        fs.mkdirSync(datalocation + dataDir);
+    if (!fs.existsSync(defaultLocation + dataDir)){
+        fs.mkdirSync(defaultLocation + dataDir);
     }
 
     var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var fileNameDate = new Date().toISOString().slice(0,10);
-    fs.writeFile(datalocation + dataDir + '/'+ fileNameDate + '.csv', csv, function(err) {
+    var path = defaultLocation + dataDir + '/'+ fileNameDate + '.csv';
+    fs.writeFile(path , csv, function(err) {
         if(err){
-            log.error('Writing to file %s %s ' + os.EOL , fileNameDate, err.message);
-            this.emit('error', err.message);
-            throw new Error (err);
+            log.error('Writing to file %s %s ' + os.EOL , path, err.message);
+            throw new Error (err, path);
         }
-        log2.info('File saved Successfully');
+        log2.info('File saved Successfully :%s',path);
     });
 };
 
