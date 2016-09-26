@@ -3,7 +3,7 @@
  * content-scraper
  * Scraping module for shopping site.
  *
- *@name Scraper
+ *@name scraper
  *@function
  *@param {String} url - The url of the site to scrape
  *@global process
@@ -25,7 +25,7 @@ var log2 = new Log('info');
 var defaultLocation =  process.cwd();
 
 
-function Scraper(url){
+function scraper(url){
     EventEmitter.call(this);
 
     var scraperEmitter = this;
@@ -94,7 +94,7 @@ function addResult(shirt, length, scraperEmitter) {
 }
 
 
-var Print = function (result) {
+var print = function (result) {
 
     //The scraper should generate a folder called data if it doesn’t exist.
     if (!fs.existsSync(defaultLocation + dataDir)){
@@ -116,10 +116,9 @@ var Print = function (result) {
 };
 
 
-util.inherits(Scraper, EventEmitter);
+util.inherits(scraper, EventEmitter);
 
-module.exports = Scraper;
-module.exports.print = Print;
+module.exports = { scraper, print };
 
 //Error File name
 //use eslint for error writing to output file using the current Date and Time to append the error to the output file
@@ -130,5 +129,5 @@ module.exports.print = Print;
 /*
 * This callback is displayed as a global member
 * @callback requestCallback
-* @exports Scraper
+* @exports scraper
 * */
