@@ -12,13 +12,11 @@ The csv file column headers Title, Price, ImageURL, URL and Time .
 ## Basic Usage
 
 ```javascript
-var scrape = require("content_scraper");
+var Scraper = require("content_scraper");
 
 var url = "http://www.shirts4mike.com/";
 
-var shirts4mikeScraper = new scrape(url);
-
-var print = scrape.print;
+var shirts4mikeScraper = new Scraper.scrape(url);
 
 /**
 * When the "end" event is triggered an array of shirt
@@ -27,14 +25,14 @@ var print = scrape.print;
 shirts4mikeScraper.on("end", function(result){
 	  //To view result in console
 	  //console.dir(result);
-	   print(result);
+	   Scraper.print(result);
 });
 
 /**
 * If a parsing, network or HTTP error occurs an
 * error object is passed in to the handler or callback
 **/
-shirts4mikeScraper.on("error", console.error);
+shirts4mikeScraper.on("error", console.error);s
 ```
 
 ### Example of Returned Data
