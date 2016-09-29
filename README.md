@@ -1,4 +1,4 @@
-# Content-Scraper-Nodejs
+# [Content-scrape-Nodejs](https://www.npmjs.com/package/content_scraper)
 An npm Package for Node.js using a third party npm package to scrape content from the site. 
 
 This project is a Node.js command line application that goes to an Ecommerce site to gets the latest prices and saves them to a spreadsheet (CSV format). This spreadsheet will be used by another application to populate a database.
@@ -16,19 +16,23 @@ var Scraper = require("content_scraper");
 
 var url = "http://www.shirts4mike.com/";
 
-var shirts4mikeScraper = new Scraper(url);
+var shirts4mikeScraper = new Scraper.scrape(url);
 
 /**
 * When the "end" event is triggered an array of shirt
 * metadata is returned
 **/
-shirts4mikeScraper.on("end", console.log);
+shirts4mikeScraper.on("end", function(result){
+	  //To view result in console
+	  //console.dir(result);
+	   Scraper.print(result);
+});
 
 /**
 * If a parsing, network or HTTP error occurs an
 * error object is passed in to the handler or callback
 **/
-shirts4mikeScraper.on("error", console.error);
+shirts4mikeScraper.on("error", console.error);s
 ```
 
 ### Example of Returned Data

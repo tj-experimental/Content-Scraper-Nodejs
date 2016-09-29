@@ -3,9 +3,10 @@
  * content-scraper
  * Scraping module for shopping site.
  *
- *@name Scraper
+ *@name scrape
  *@function
  *@param {String} url - The url of the site to scrape
+ *@global process
  */
 
 var fs = require('fs');
@@ -17,19 +18,19 @@ var xRay = Xray();
 var dataDir = '/data';
 var json2csv = require('json2csv');
 var Log = require('log');
-var errorStream = fs.createWriteStream('./scraper-error.log', {flags: 'a'});
+var errorStream = fs.createWriteStream('./scrape-error.log', {flags: 'a'});
 var log = new Log('debug', errorStream);
 var log2 = new Log('info');
+/* global process */
+var defaultLocation =  process.cwd();
 
 
-function Scraper(url){
-    //The scraper should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync('.' + dataDir)){
-        fs.mkdirSync('.' + dataDir);
-    }
+var scrape = function (url){
     EventEmitter.call(this);
 
     var scraperEmitter = this;
+
+
     //Check if the url is of type string
     if ('string' !== typeof url) {
         scraperEmitter.emit('error', new Error('The url is not a string '));
@@ -45,7 +46,7 @@ function Scraper(url){
                 'time': undefined
         }])(function(error, data){
             if(error) {
-                log2.alert('An Error occurred while retrieving contents from %s. Check the scraper-error.log for more information',url);
+                log2.alert('An Error occurred while retrieving contents from %s. Check the scrape-error.log for more information',url);
                 log.error( error.errno + ' ' + error.syscall +' Check connection: '+ error.message + os.EOL);
                 scraperEmitter.emit('error', new Error(error.errno+' '+error.syscall+' Check connection: '+error.message));
             }
@@ -79,7 +80,7 @@ function Scraper(url){
         scraperEmitter.emit('error', new Error('The url string is empty '));
         throw new Error ('The url string is empty ');
     }
-}
+};
 
 var i = 0;
 var result = [];
@@ -89,28 +90,35 @@ function addResult(shirt, length, scraperEmitter) {
     i++;
     if(i === length){
         scraperEmitter.emit('end', result);
-        printOutResult(result);
     }
 }
 
-function printOutResult(result) {
+
+var print = function (result) {
+
+    //The scrape should generate a folder called data if it doesn’t exist.
+    if (!fs.existsSync(defaultLocation + dataDir)){
+        fs.mkdirSync(defaultLocation + dataDir);
+    }
+
     var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var fileNameDate = new Date().toISOString().slice(0,10);
-    fs.writeFile('.' + dataDir + '/'+ fileNameDate +'.csv', csv, function(err) {
+    var path = defaultLocation + dataDir + '/'+ fileNameDate + '.csv';
+    fs.writeFile(path , csv, function(err) {
         if(err){
-            log.error('Writing to file %s %s ' + os.EOL , fileNameDate, err.message);
-            throw new Error (err);
+            log.error('Writing to file %s %s ' + os.EOL , path, err.message);
+            throw new Error (err, path);
         }
-        log2.info('File saved Successfully');
+        log2.info('File saved Successfully :%s',path);
     });
-}
+};
 
 
-util.inherits(Scraper, EventEmitter);
+util.inherits(scrape, EventEmitter);
 
-module.exports = Scraper;
+module.exports = { scrape, print };
 
 //Error File name
 //use eslint for error writing to output file using the current Date and Time to append the error to the output file
@@ -121,5 +129,5 @@ module.exports = Scraper;
 /*
 * This callback is displayed as a global member
 * @callback requestCallback
-* @exports Scraper
+* @exports scrape
 * */
