@@ -32,7 +32,7 @@ shirts4mikeScraper.on("end", function(result){
 * If a parsing, network or HTTP error occurs an
 * error object is passed in to the handler or callback
 **/
-shirts4mikeScraper.on("error", console.error);s
+shirts4mikeScraper.on("error", console.error);
 ```
 
 ### Example of Returned Data
