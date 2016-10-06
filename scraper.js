@@ -9,20 +9,20 @@
  *@global process
  */
 
-var fs = require('fs');
-var EventEmitter = require('events').EventEmitter;
-var util = require('util');
-var os = require('os');
-var Xray = require('x-ray');
-var xRay = Xray();
-var dataDir = '/data';
-var json2csv = require('json2csv');
-var Log = require('log');
-var errorStream = fs.createWriteStream('./scrape-error.log', {flags: 'a'});
-var log = new Log('debug', errorStream);
-var log2 = new Log('info');
+var fs = require('fs'),
+EventEmitter = require('events').EventEmitter,
+util = require('util'),
+os = require('os'),
+Xray = require('x-ray'),
+xRay = Xray(),
+dataDir = '/data',
+json2csv = require('json2csv'),
+Log = require('log'),
+errorStream = fs.createWriteStream('./scrape-error.log', {flags: 'a'}),
+log = new Log('debug', errorStream),
+log2 = new Log('info'),
 /* global process */
-var defaultLocation =  process.cwd();
+defaultLocation =  process.cwd(),
 
 
 var scrape = function (url){
@@ -118,7 +118,7 @@ var print = function (result) {
 
 util.inherits(scrape, EventEmitter);
 
-module.exports = { scrape, print };
+var exports = module.exports = { scrape, print };
 
 //Error File name
 //use eslint for error writing to output file using the current Date and Time to append the error to the output file
