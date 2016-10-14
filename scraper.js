@@ -100,7 +100,11 @@ var print = function (result) {
     if (!fs.existsSync(defaultLocation + dataDir)){
         fs.mkdirSync(defaultLocation + dataDir);
     }
-
+    for (key in result){
+            if (result[key] === undefined){
+                    log.info('This key has an empty data %s', result[key]);
+            }
+    }
     var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
