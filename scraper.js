@@ -10,22 +10,20 @@
  */
 
 var fs = require('fs'),
-EventEmitter = require('events').EventEmitter,
-util = require('util'),
-os = require('os'),
-Xray = require('x-ray'),
-xRay = Xray(),
-dataDir = '/data',
-json2csv = require('json2csv'),
-Log = require('log'),
-errorStream = fs.createWriteStream('./scrape-error.log', {flags: 'a'}),
-log = new Log('debug', errorStream),
-log2 = new Log('info'),
+    EventEmitter = require('events').EventEmitter,
+    util = require('util'),
+    os = require('os'),
+    Xray = require('x-ray'),
+    xRay = Xray(),
+    dataDir = '/data',
+    json2csv = require('json2csv'),
+    Log = require('log'),
+    errorStream = fs.createWriteStream('./scrape-error.log', {flags: 'a'}),
+    log = new Log('debug', errorStream),
+    log2 = new Log('info'),
 /* global process */
-defaultLocation =  process.cwd(),
-filename = defaultLocation + dataDir,
-new_fname = undefined,
-new_dirname = undefined;
+    defaultLocation =  process.cwd(),
+    filename = defaultLocation + dataDir;
 
 
 var scrape = function (url){
@@ -98,38 +96,30 @@ function addResult(shirt, length, scraperEmitter) {
 
 var print = function (result, new_dirname, new_fname) {
     var path;
-    var created =  False;
-    for (key in result){
-            if (result[key] === undefined){
-                    log.info('This key has an empty data %s', result[key]);
-            }
-    }
-    if (new_dirname !== undefined){
+    if (new_dirname !== undefined && typeof(new_dirname) == 'string' ){
         path = defaultLocation +'/'+ new_dirname;
-       if (!fs.existsSync(path)){
+        if (!fs.existsSync(path)){
             fs.mkdirSync(path);
-            created = True;
-        }
-        else{
-            log.error('Error Creating file in the location %s', path)
+        }else{
+            log.error('Error Creating file in the location %s', path);
         }
     }else{
         //The scrape should generate a folder called data if it doesn’t exist.
         path = filename;
         if (!fs.existsSync(filename)){
             fs.mkdirSync(filename);
-            created = True
         }else{
-            log.error('Error Creating the file in the location %s', path)
+            log.error('Error Creating the file in the location %s', path);
         }
     } 
     var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
-    var date = new Date()
-    var fileName = new Date(date + 'UTC').toISOString().slice(0,10);
-    if (new_fname !== undefined && new_fname.indexOf('.csv') == -1 ){
-        fileName = new_fname
+    var date = new Date();
+    var fileName = new Date(date + 'UTC') .toISOString().slice(0,10);
+    if (new_fname !== undefined && new_fname.indexOf('.csv') == -1 && 
+    typeof(new_dirname) == 'string' ){
+        fileName = new_fname;
     }
     var outputPath = path + '/'+ fileName + '.csv';
     fs.writeFile(outputPath , csv, function(err) {
@@ -144,7 +134,7 @@ var print = function (result, new_dirname, new_fname) {
 
 util.inherits(scrape, EventEmitter);
 
-var exports = module.exports = { scrape, print };
+module.exports = { scrape, print };
 
 //Error File name
 //use eslint for error writing to output file using the current Date and Time to append the error to the output file
