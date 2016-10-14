@@ -18,6 +18,10 @@ var url = "http://www.shirts4mike.com/";
 
 var shirts4mikeScraper = new Scraper.scrape(url);
 
+var directory = 'outputDir';
+
+var filename = 'results';
+
 /**
 * When the "end" event is triggered an array of shirt
 * metadata is returned
@@ -25,7 +29,12 @@ var shirts4mikeScraper = new Scraper.scrape(url);
 shirts4mikeScraper.on("end", function(result){
 	  //To view result in console
 	  //console.dir(result);
-	   Scraper.print(result);
+	  //Optional parameter to change the filename and the output directory
+	  
+	  Scraper.print(result, directory, filename);
+	  
+	  //Or simply to use the default directory 
+	  // Scraper.print(result);
 });
 
 /**
