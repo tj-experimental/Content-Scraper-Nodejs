@@ -23,6 +23,9 @@ log = new Log('debug', errorStream),
 log2 = new Log('info'),
 /* global process */
 defaultLocation =  process.cwd(),
+filename = defaultLocation + dataDir,
+new_fname = undefined,
+new_dirname = undefined;
 
 
 var scrape = function (url){
@@ -94,19 +97,38 @@ function addResult(shirt, length, scraperEmitter) {
 }
 
 
-var print = function (result) {
-
-    //The scrape should generate a folder called data if it doesn’t exist.
-    if (!fs.existsSync(defaultLocation + dataDir)){
-        fs.mkdirSync(defaultLocation + dataDir);
-    }
-
+var print = function (result, new_dirname, new_fname) {
+    var path;
+    var created =  False;
+    if (new_dirname !== undefined){
+        path = defaultLocation +'/'+ new_dirname;
+       if (!fs.existsSync(path)){
+            fs.mkdirSync(path);
+            created = True;
+        }
+        else{
+            log.error('Error Creating file in the location %s', path)
+        }
+    }else{
+        //The scrape should generate a folder called data if it doesn’t exist.
+        path = filename;
+        if (!fs.existsSync(filename)){
+            fs.mkdirSync(filename);
+            created = True
+        }else{
+            log.error('Error Creating the file in the location %s', path)
+        }
+    } 
     var fields = ['title', 'price', 'imageUrl', 'href', 'time'];
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
-    var fileNameDate = new Date().toISOString().slice(0,10);
-    var path = defaultLocation + dataDir + '/'+ fileNameDate + '.csv';
-    fs.writeFile(path , csv, function(err) {
+    var date = new Date()
+    var fileName = new Date(date + 'UTC').toISOString().slice(0,10);
+    if (new_fname !== undefined && new_fname.indexOf('.csv') == -1 ){
+        fileName = new_fname
+    }
+    var outputPath = path + '/'+ fileName + '.csv';
+    fs.writeFile(outputPath , csv, function(err) {
         if(err){
             log.error('Writing to file %s %s ' + os.EOL , path, err.message);
             throw new Error (err, path);
