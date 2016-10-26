@@ -21,7 +21,7 @@ var fs = require('fs'),
     errorStream = fs.createWriteStream('./scrape-error.log', {flags: 'a'}),
     log = new Log('debug', errorStream),
     log2 = new Log('info'),
-/* global process */
+    /* global process */
     defaultLocation =  process.cwd(),
     filename = defaultLocation + dataDir;
 
