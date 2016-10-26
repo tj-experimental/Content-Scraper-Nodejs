@@ -127,7 +127,7 @@ var print = function (result, new_dirname, new_fname) {
             log.error('Writing to file %s %s ' + os.EOL , path, err.message);
             throw new Error (err, path);
         }
-        log2.info('File saved Successfully :%s',path);
+        log2.info('File saved Successfully : %s/%s.csv',path, fileName);
     });
 };
 

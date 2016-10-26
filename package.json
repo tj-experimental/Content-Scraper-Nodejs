@@ -2,7 +2,7 @@
   "name": "content_scraper",
   "version": "1.0.28",
   "description": "An npm Package for Node.js using a third party npm package to scrape content from the site. To create a csv file",
-  "main": "scraper.js",
+  "main": "src/scraper.js",
   "dependencies": {
     "json2csv": "^3.7.0",
     "log": "^1.4.0",
@@ -24,7 +24,7 @@
   },
   "keywords": [
     "content",
-    "scrapper",
+    "scraper",
     "php",
     "json",
     "website"
