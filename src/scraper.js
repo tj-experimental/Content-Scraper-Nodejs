@@ -96,7 +96,7 @@ function addResult(shirt, length, scraperEmitter) {
 
 var print = function (result, new_dirname, new_fname) {
     var path;
-    if (new_dirname !== undefined && typeof(new_dirname) == 'string' ){
+    if (new_dirname !== undefined && typeof new_dirname == 'string' ){
         path = defaultLocation +'/'+ new_dirname;
         if (!fs.existsSync(path)){
             fs.mkdirSync(path);
@@ -118,7 +118,7 @@ var print = function (result, new_dirname, new_fname) {
     var date = new Date();
     var fileName = new Date(date + 'UTC') .toISOString().slice(0,10);
     if (new_fname !== undefined && new_fname.indexOf('.csv') == -1 && 
-    typeof(new_dirname) == 'string' ){
+    typeof new_dirname == 'string' ){
         fileName = new_fname;
     }
     var outputPath = path + '/'+ fileName + '.csv';
