@@ -1,4 +1,4 @@
-# [Content-scrape-Nodejs](https://www.npmjs.com/package/content_scraper)
+Content-scrape-Javascript
 An npm Package for Node.js using a third party npm package to scrape content from the site. 
 
 This project is a Node.js command line application that goes to an Ecommerce site to gets the latest prices and saves them to a spreadsheet (CSV format). This spreadsheet will be used by another application to populate a database.
