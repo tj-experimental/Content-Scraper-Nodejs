@@ -116,11 +116,13 @@ var print = function (result, new_dirname, new_fname) {
     var fieldNames = ['Title', 'Price $', 'ImageURL', 'URL', 'Time'];
     var csv = json2csv({ data: result, fields: fields , fieldNames: fieldNames });
     var date = new Date();
-    var fileName = new Date(date + 'UTC') .toISOString().slice(0,10);
-    if (new_fname !== undefined && new_fname.indexOf('.csv') == -1 && 
-    typeof new_dirname == 'string' ){
-        fileName = new_fname;
+    var fileName = new Date(date + 'UTC').toISOString().slice(0,10);
+
+    if (new_fname !== undefined && typeof new_fname == 'string'){
+        if (new_fname.indexOf('.csv') == -1 ) fileName = new_fname;
+        else fileName = new_fname.replace('.csv', '')
     }
+
     var outputPath = path + '/'+ fileName + '.csv';
     fs.writeFile(outputPath , csv, function(err) {
         if(err){
