@@ -1,6 +1,6 @@
 {
   "name": "content_scraper",
-  "version": "1.0.31",
+  "version": "1.0.33",
   "description": "An npm Package for Node.js using a third party npm package to scrape content from the site. To create a csv file",
   "main": "./src/scraper.js",
   "dependencies": {
@@ -16,8 +16,9 @@
     "test": "npm run lint",
     "lint": "eslint scraper.js",
     "initialize": "eslint --init",
-    "build": "npm run lint && npm version patch",
-    "deploy": "npm run build && npm publish"
+    "patch": "npm version patch",
+    "build_patch": "npm run lint && npm run patch",
+    "deploy_patch": "npm run build_patch && npm publish"
   },
   "repository": {
     "type": "git",
