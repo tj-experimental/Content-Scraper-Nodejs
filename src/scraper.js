@@ -138,14 +138,3 @@ util.inherits(scrape, EventEmitter);
 
 module.exports = { scrape, print };
 
-//Error File name
-//use eslint for error writing to output file using the current Date and Time to append the error to the output file
-//Use a linting tool like ESLint to check your code for syntax errors and 
-//to ensure general code quality. You should be able to run npm run lint to check your code.
-
-
-/*
-* This callback is displayed as a global member
-* @callback requestCallback
-* @exports scrape
-* */
